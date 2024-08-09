@@ -1,13 +1,11 @@
 package com.hong.recipe_finder.controller;
 
 import com.hong.recipe_finder.model.Recipe;
-import com.hong.recipe_finder.repository.RecipeRepository;
 import com.hong.recipe_finder.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 

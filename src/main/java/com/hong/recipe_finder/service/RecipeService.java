@@ -1,6 +1,6 @@
 package com.hong.recipe_finder.service;
 
-import com.hong.recipe_finder.model.Recipe;
+import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

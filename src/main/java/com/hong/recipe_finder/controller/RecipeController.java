@@ -1,6 +1,6 @@
 package com.hong.recipe_finder.controller;
 
-import com.hong.recipe_finder.model.Recipe;
+import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -42,3 +42,30 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
+
+# Spoonacular API
+
+# API keys
+spoonacular:
+  api:
+    key: 4491a88dd7dd4ce4888626baf188b460
+
+edamam:
+  recipe:
+    api:
+      key: eb761fc17dd7daa82de4f6418e509da4
+    app:
+      id: 5ee36020
+
+  nutrition:
+    api:
+      key: 9135ed3d8a6b8ffc62a0125e7b2faebd
+    app:
+      id: a2f6e0bf
+
+  meal:
+    api:
+      key: 704a60536bb81c27ea96f9ca84733d8b
+    app:
+      id: 4fabdf73

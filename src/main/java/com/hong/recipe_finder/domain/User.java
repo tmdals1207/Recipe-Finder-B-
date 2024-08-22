@@ -21,7 +21,7 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "password")
@@ -29,6 +29,18 @@ public class User {
 
     @Column(name = "provider")
     private String provider;
+
+    @Column(name = "token")
+    private String token;
+
+    @Builder
+    public User(String username, String email, String password, String provider, String token) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.provider = provider;
+        this.token = token;
+    }
 
     // 사용자의 이름이나 이메일을 업데이트하는 메소드
     public User updateUser(String username, String email) {

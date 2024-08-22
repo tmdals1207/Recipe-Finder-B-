@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @NonNullApi
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer{
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -18,5 +18,15 @@ public class WebConfig {
                 registry.addMapping("/**").allowedOrigins("http://localhost:8080");
             }
         };
+    }
+
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000")  // Vue.js 개발 서버 주소
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

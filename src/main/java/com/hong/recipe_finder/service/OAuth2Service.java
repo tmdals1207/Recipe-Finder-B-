@@ -4,6 +4,7 @@ import com.hong.recipe_finder.domain.User;
 import com.hong.recipe_finder.dto.UserDto;
 import com.hong.recipe_finder.enums.OAuthAttributes;
 import com.hong.recipe_finder.repository.UserRepository;
+import com.hong.recipe_finder.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -23,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -40,7 +43,17 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         UserDto userDto = OAuthAttributes.extract(registrationId, attributes);
         userDto.setProvider(registrationId);
 
-        updateOrSaveUser(userDto);
+        // 사용자 정보 업데이트 또는 저장
+        User user = updateOrSaveUser(userDto);
+
+        // JWT 토큰 생성
+        String token = jwtTokenProvider.createToken(user.getEmail());
+
+        // 사용자 객체에 토큰 설정
+        user.setToken(token);
+
+        // 업데이트된 사용자 정보 저장
+        userRepository.save(user);
 
         Map<String, Object> customAttribute =
                 getCustomAttribute(registrationId, userNameAttributeName, attributes, userDto);
@@ -64,12 +77,14 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         return customAttribute;
     }
 
-    private void updateOrSaveUser(UserDto userProfile) {
-        User user = userRepository
-                .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider())
+    private User updateOrSaveUser(UserDto userProfile) {
+        Optional<User> existingUser = userRepository
+                .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider());
+
+        User user = existingUser
                 .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getEmail()))
                 .orElse(userProfile.toEntity());
 
-        userRepository.save(user);
+        return user;
     }
 }

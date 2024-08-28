@@ -6,7 +6,10 @@ import com.hong.recipe_finder.enums.OAuthAttributes;
 import com.hong.recipe_finder.repository.UserRepository;
 import com.hong.recipe_finder.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -14,12 +17,12 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -41,6 +44,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
         UserDto userDto = OAuthAttributes.extract(registrationId, attributes);
+        log.info(attributes.toString());
         userDto.setProvider(registrationId);
 
         // 사용자 정보 업데이트 또는 저장
@@ -81,10 +85,10 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
         Optional<User> existingUser = userRepository
                 .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider());
 
-        User user = existingUser
+        return existingUser
                 .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getEmail()))
                 .orElse(userProfile.toEntity());
-
-        return user;
     }
+
+
 }

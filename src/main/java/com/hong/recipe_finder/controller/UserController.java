@@ -62,13 +62,15 @@ public class UserController {
 
         // 토큰을 기반으로 사용자 조회
         String userEmail = jwtTokenProvider.parseToken(token).getSubject();
-        User user = userRepository.findByEmail(userEmail);
+        String provider = userRepository.findByToken(token).getProvider();
+        User user = userRepository.findUserByEmailAndProvider(userEmail, provider);
 
         if (user != null) {
             if (user.getProvider() != null && !user.getProvider().isEmpty()) {
                 // OAuth 로그아웃 처리
                 user.setToken(null);
                 userService.saveUser(user);
+                log.info("User {} logged out", user.getEmail());
             } else {
                 // 일반 로그아웃 처리
                 userService.logout(user);

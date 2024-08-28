@@ -7,11 +7,16 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
@@ -67,5 +72,16 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    // JWT 토큰으로부터 인증 정보 조회
+    public Authentication getAuthentication(String token) {
+        Claims claims = parseToken(token);
+        String username = claims.getSubject();
+        List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("roles")).stream()
+                .map(role -> new SimpleGrantedAuthority((String) role))
+                .collect(Collectors.toList());
+
+        return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 }

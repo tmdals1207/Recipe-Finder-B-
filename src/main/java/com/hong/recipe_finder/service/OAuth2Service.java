@@ -82,13 +82,15 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     }
 
     private User updateOrSaveUser(UserDto userProfile) {
-        Optional<User> existingUser = userRepository
+        User existingUser = userRepository
                 .findUserByEmailAndProvider(userProfile.getEmail(), userProfile.getProvider());
-
-        return existingUser
-                .map(value -> value.updateUser(userProfile.getUsername(), userProfile.getEmail()))
-                .orElse(userProfile.toEntity());
+        if (existingUser != null) {
+            // 기존 사용자 업데이트
+            return existingUser.updateUser(userProfile.getUsername(), userProfile.getEmail());
+        } else {
+            // 새로운 사용자 생성 및 저장
+            return userProfile.toEntity();
+        }
     }
-
 
 }

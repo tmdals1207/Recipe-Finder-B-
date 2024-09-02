@@ -26,8 +26,8 @@ spring:
             client-name: Kakao
 
         provider:
-#          google:
-#            authorization-uri: https://accounts.google.com/o/oauth2/auth
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth?prompt=consent
 #            token-uri: https://oauth2.googleapis.com/token
 #            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
@@ -38,7 +38,7 @@ spring:
             user-name-attribute: response
 
           kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            authorization-uri: https://kauth.kakao.com/oauth/authorize?prompt=login
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id

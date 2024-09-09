@@ -47,6 +47,7 @@ public class EdamamController {
     @GetMapping("/api/edamam/nutrition")
     public String getNutritionInfo(@RequestParam String recipeUrl) {
         log.info("Edamam 영양 정보 검색 실행");
+        log.info((recipeUrl));
         return edamamService.getNutritionInfo(recipeUrl);
     }
 

@@ -1,5 +1,6 @@
 package com.hong.recipe_finder.service;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class EdamamService {
 
@@ -54,7 +56,7 @@ public class EdamamService {
                 new ParameterizedTypeReference<Map<String, Object>>() {},
                 params
         );
-
+        log.info(String.valueOf(responseEntity));
         return responseEntity.getBody();
     }
 

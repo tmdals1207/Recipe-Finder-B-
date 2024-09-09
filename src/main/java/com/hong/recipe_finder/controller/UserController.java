@@ -38,6 +38,12 @@ public class UserController {
         return ResponseEntity.ok("User registered successfully");
     }
 
+    @GetMapping("/check-username")
+    public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
+        boolean isAvailable = userService.checkUsernameAvailability(username);
+        return ResponseEntity.ok(isAvailable);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto userDto) {
         log.info("로그인 시작!");

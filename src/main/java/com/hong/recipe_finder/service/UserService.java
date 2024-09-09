@@ -19,11 +19,20 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public void register(UserDto userDto) {
+        if (userRepository.findByUsername(userDto.getUsername()) != null) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
         User user = new User();
         user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         log.info("user 저장 완료");
         userRepository.save(user);
+    }
+
+    public boolean checkUsernameAvailability(String username) {
+        return userRepository.findByUsername(username) == null;
     }
 
     public User login(UserDto userDto) {

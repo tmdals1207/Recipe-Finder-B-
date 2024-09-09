@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
@@ -15,12 +16,10 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 포트
 @RequestMapping("/api/recipes")
-
 public class RecipeController {
 
     @Autowired
     private RecipeService recipeService; // Service 계층 사용
-
 
     @GetMapping("/all")
     public ResponseEntity<List<Recipe>> getAllRecipes() {
@@ -34,6 +33,9 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        recipe.setAuthorProfile(currentUserName);  // 작성자 프로필 설정
         Recipe createdRecipe = recipeService.createRecipe(recipe);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe);
     }
@@ -41,13 +43,6 @@ public class RecipeController {
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
         return recipeService.getRecipeById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipeDetails) {
-        return recipeService.updateRecipe(id, recipeDetails)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

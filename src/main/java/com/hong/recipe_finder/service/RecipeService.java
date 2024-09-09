@@ -27,15 +27,15 @@ public class RecipeService {
         return recipeRepository.findById(id);
     }
 
-    public Optional<Recipe> updateRecipe(Long id, Recipe recipeDetails) {
-        return recipeRepository.findById(id)
-                .map(recipe -> {
-                    recipe.setName(recipeDetails.getName());
-                    recipe.setIngredients(recipeDetails.getIngredients());
-                    recipe.setInstructions(recipeDetails.getInstructions());
-                    return recipeRepository.save(recipe);
-                });
-    }
+//    public Optional<Recipe> updateRecipe(Long id, Recipe recipeDetails) {
+//        return recipeRepository.findById(id)
+//                .map(recipe -> {
+//                    recipe.setName(recipeDetails.getName());
+//                    recipe.setIngredients(recipeDetails.getIngredients());
+//                    recipe.setInstructions(recipeDetails.getInstructions());
+//                    return recipeRepository.save(recipe);
+//                });
+//    }
 
     public Optional<Recipe> deleteRecipe(Long id) {
         return recipeRepository.findById(id)

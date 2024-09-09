@@ -24,6 +24,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "password")
     private String password;
 
@@ -34,9 +37,10 @@ public class User {
     private String token;
 
     @Builder
-    public User(String username, String email, String password, String provider, String token) {
+    public User(String username, String email, String phone, String password, String provider, String token) {
         this.username = username;
         this.email = email;
+        this.phone = phone;
         this.password = password;
         this.provider = provider;
         this.token = token;

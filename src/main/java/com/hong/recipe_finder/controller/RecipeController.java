@@ -31,7 +31,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipes);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();

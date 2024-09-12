@@ -26,6 +26,7 @@ public class UserService {
         User user = new User();
         user.setEmail(userDto.getEmail());
         user.setUsername(userDto.getUsername());
+        user.setPhone(userDto.getPhone());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         log.info("user 저장 완료");
         userRepository.save(user);

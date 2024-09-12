@@ -59,9 +59,10 @@ public class OAuthController {
         }
         // Authorization 헤더에서 "Bearer " 문자열을 제거하고 실제 토큰 값만 추출
         String actualToken = token.replace("Bearer ", "");
-
+        log.info("getUser: {}", actualToken);
         // 이메일을 통해 사용자 검색
         User user = userRepository.findByToken(actualToken);
+        log.info("user: {}", user);
         return ResponseEntity.ok(user);
     }
 

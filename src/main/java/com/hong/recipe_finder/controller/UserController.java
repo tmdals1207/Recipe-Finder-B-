@@ -16,17 +16,16 @@ import com.hong.recipe_finder.security.JwtTokenProvider;
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "Authorization")
+
 public class UserController {
 
     private final UserService userService;
-    private final OAuth2Service oAuth2Service;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    public UserController(UserService userService, OAuth2Service oAuth2Service, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
         this.userService = userService;
-        this.oAuth2Service = oAuth2Service;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRepository;
     }
@@ -65,24 +64,31 @@ public class UserController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         log.info("logout 시작!");
         String token = request.getHeader("Authorization").substring(7); // "Bearer " 제외
+        log.info("request: {}",request.getHeader("Authorization"));
+        log.info("받아온 토큰 : " + token);
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
 
-        // 토큰을 기반으로 사용자 조회
-        String userEmail = jwtTokenProvider.parseToken(token).getSubject();
-        String provider = userRepository.findByToken(token).getProvider();
-        User user = userRepository.findUserByEmailAndProvider(userEmail, provider);
+        User user = userRepository.findByToken(token); // 토큰으로 사용자 조회
 
         if (user != null) {
             if (user.getProvider() != null && !user.getProvider().isEmpty()) {
                 // OAuth 로그아웃 처리
                 user.setToken(null);
                 userService.saveUser(user);
-                log.info("User {} logged out", user.getEmail());
+                log.info("OAuth User {} logged out", user.getEmail());
             } else {
-                // 일반 로그아웃 처리
+                // 일반 로그인 사용자의 로그아웃 처리
                 userService.logout(user);
+                log.info("User {} logged out", user.getEmail());
             }
+            return ResponseEntity.ok("Logout successful");
+        } else {
+            log.error("User not found with token: {}", token);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         }
-
-        return ResponseEntity.ok("Logout successful");
     }
+
+
 }

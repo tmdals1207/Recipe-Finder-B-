@@ -3,7 +3,6 @@ package com.hong.recipe_finder.controller;
 import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,8 +17,11 @@ import java.util.List;
 @RequestMapping("/api/recipes")
 public class RecipeController {
 
-    @Autowired
-    private RecipeService recipeService; // Service 계층 사용
+    private final RecipeService recipeService; // Service 계층 사용
+
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Recipe>> getAllRecipes() {

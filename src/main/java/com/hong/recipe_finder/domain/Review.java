@@ -26,17 +26,6 @@ public class Review {
 
     private double rating; // 리뷰 별점
 
-    // Constructors, Getters and Setters, etc.
-
-    public Review() {}
-
-    public Review(Recipe recipe, String content, String imageUrl, boolean isPhotoReview, double rating) {
-        this.recipe = recipe;
-        this.content = content;
-        this.imageUrl = imageUrl;
-        this.isPhotoReview = isPhotoReview;
-        this.rating = rating;
+    public Review() {
     }
-
-    // Getters and Setters
 }

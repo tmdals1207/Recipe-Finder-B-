@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import java.util.Optional;
 
 @Slf4j
 @Configuration
@@ -27,7 +26,7 @@ public class SecurityConfig {
 
     private final OAuth2Service oAuth2Service;
     private final JwtTokenProvider jwtTokenProvider;
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public SecurityConfig(OAuth2Service oAuth2Service, JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
         this.oAuth2Service = oAuth2Service;
@@ -66,7 +65,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtFilter jwtFilter() {
-        return new JwtFilter(jwtTokenProvider); // JwtTokenProvider를 사용하는 JwtFilter 빈 생성
+        return new JwtFilter(jwtTokenProvider); // JwtTokenProvider 를 사용하는 JwtFilter 빈 생성
     }
 
     @Bean
@@ -75,7 +74,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
+    public WebSecurityCustomizer webSecurityCustomizer() { // security 를 적용하지 않을 리소스
         return web -> web.ignoring()
                 .requestMatchers("/error", "/favicon.ico");
     }

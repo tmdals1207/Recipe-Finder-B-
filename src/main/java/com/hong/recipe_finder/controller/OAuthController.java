@@ -39,7 +39,6 @@ public class OAuthController {
     }
 
 
-
     @GetMapping("/callback")
     public ResponseEntity<Map<String, Object>> oauth2Callback(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = oAuth2Service.loadUser(userRequest);

@@ -13,7 +13,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -25,11 +24,10 @@ public class JwtFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        // HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // 요청 헤더에서 JWT 토큰을 가져옴
         String token = resolveToken(httpRequest);
@@ -40,13 +38,11 @@ public class JwtFilter extends GenericFilterBean {
             String username = jwtTokenProvider.parseToken(token).getSubject();
             log.info("Authenticated user: {}", username);
 
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
 
         }
         // 만약 인증 정보가 이미 존재하고 OAuth2 인증인 경우 JWT 인증을 건너뜀
-        else if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+        else if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
             log.info("OAuth2 Authentication detected, bypassing JWT validation.");
             log.info("Authenticated with OAuth2: {}", SecurityContextHolder.getContext().getAuthentication());
         }

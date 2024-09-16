@@ -10,8 +10,8 @@ public enum OAuthAttributes {
 
     GOOGLE("google", (attribute) -> {
         UserDto userDto = new UserDto();
-        userDto.setUserName((String)attribute.get("name"));
-        userDto.setEmail((String)attribute.get("email"));
+        userDto.setUserName((String) attribute.get("name"));
+        userDto.setEmail((String) attribute.get("email"));
 
         return userDto;
     }),
@@ -19,7 +19,7 @@ public enum OAuthAttributes {
     NAVER("naver", (attribute) -> {
         UserDto userProfile = new UserDto();
 
-        Map<String, String> responseValue = (Map)attribute.get("response");
+        Map<String, String> responseValue = (Map) attribute.get("response");
 
         userProfile.setUserName(responseValue.get("name"));
         userProfile.setEmail(responseValue.get("email"));
@@ -29,12 +29,12 @@ public enum OAuthAttributes {
 
     KAKAO("kakao", (attribute) -> {
 
-        Map<String, Object> account = (Map)attribute.get("kakao_account");
-        Map<String, String> profile = (Map)account.get("profile");
+        Map<String, Object> account = (Map) attribute.get("kakao_account");
+        Map<String, String> profile = (Map) account.get("profile");
 
         UserDto userProfile = new UserDto();
         userProfile.setUserName(profile.get("nickname"));
-        userProfile.setEmail((String)account.get("email"));
+        userProfile.setEmail((String) account.get("email"));
 
         return userProfile;
     });

@@ -26,14 +26,7 @@ public class CookingStep {
 
     private int stepNumber; // 조리 순서 번호
 
-    // Constructors, Getters and Setters, etc.
-
-    public CookingStep() {}
-
-    public CookingStep(Recipe recipe, String description, String imageUrl, int stepNumber) {
-        this.recipe = recipe;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.stepNumber = stepNumber;
+    public CookingStep() {
     }
+
 }

@@ -3,7 +3,6 @@ package com.hong.recipe_finder.controller;
 import com.hong.recipe_finder.domain.User;
 import com.hong.recipe_finder.dto.LoginResponse;
 import com.hong.recipe_finder.repository.UserRepository;
-import com.hong.recipe_finder.service.OAuth2Service;
 import com.hong.recipe_finder.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -64,9 +63,9 @@ public class UserController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         log.info("logout 시작!");
         String token = request.getHeader("Authorization").substring(7); // "Bearer " 제외
-        log.info("request: {}",request.getHeader("Authorization"));
-        log.info("받아온 토큰 : " + token);
-        if (token == null || token.isEmpty()) {
+        log.info("request: {}", request.getHeader("Authorization"));
+        log.info("받아온 토큰 : {}", token);
+        if (token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
 

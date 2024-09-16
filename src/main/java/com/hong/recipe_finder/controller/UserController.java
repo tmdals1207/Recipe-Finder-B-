@@ -77,6 +77,7 @@ public class UserController {
                 user.setToken(null);
                 userService.saveUser(user);
                 log.info("OAuth User {} logged out", user.getEmail());
+
             } else {
                 // 일반 로그인 사용자의 로그아웃 처리
                 userService.logout(user);

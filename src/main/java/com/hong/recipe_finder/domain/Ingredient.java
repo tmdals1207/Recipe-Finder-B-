@@ -42,8 +42,6 @@ public class Ingredient {
     private double vitaminE; // 비타민 E (mg)
     private double vitaminK; // 비타민 K (µg)
 
-    // Constructors, Getters and Setters, etc.
-
     public Ingredient() {}
 
     public Ingredient(String name, String quantity, double calories, double fat, double saturatedFat, double transFat,

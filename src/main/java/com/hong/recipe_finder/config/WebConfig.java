@@ -12,7 +12,7 @@ import java.util.Collections;
 
 @Configuration
 @NonNullApi
-public class WebConfig implements WebMvcConfigurer{
+public class WebConfig implements WebMvcConfigurer {
 
 
     @Bean
@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000") // 프론트엔드의 URL을 추가
+                .allowedOrigins("http://localhost:3000") // 프론트엔드의 URL 을 추가
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메소드
                 .allowedHeaders("*") // 허용할 HTTP 헤더
                 .allowCredentials(true); // 인증 정보를 포함한 요청을 허용

@@ -28,8 +28,8 @@ spring:
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/v2/auth?prompt=consent
-#            token-uri: https://oauth2.googleapis.com/token
-#            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+          #            token-uri: https://oauth2.googleapis.com/token
+          #            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize

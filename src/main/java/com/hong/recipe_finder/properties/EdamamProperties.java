@@ -11,23 +11,22 @@ public class EdamamProperties {
     private Nutrition nutrition;
     private Meal meal;
 
-    // getters and setters
 
     public static class Recipe {
         private String api;
         private String app;
-        // getters and setters
+
     }
 
     public static class Nutrition {
         private String api;
         private String app;
-        // getters and setters
+
     }
 
     public static class Meal {
         private String api;
         private String app;
-        // getters and setters
+
     }
 }

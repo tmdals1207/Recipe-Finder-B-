@@ -19,25 +19,19 @@ import java.util.Map;
 @Service
 public class EdamamService {
 
+    private final OkHttpClient client = new OkHttpClient();
     @Value("${edamam.recipe.api.key}")
     private String recipeApiKey;
-
     @Value("${edamam.recipe.app.id}")
     private String recipeAppId;
-
     @Value("${edamam.nutrition.api.key}")
     private String nutritionApiKey;
-
     @Value("${edamam.nutrition.app.id}")
     private String nutritionAppId;
-
     @Value("${edamam.meal.api.key}")
     private String mealApiKey;
-
     @Value("${edamam.meal.app.id}")
     private String mealAppId;
-
-    private final OkHttpClient client = new OkHttpClient();
 
     // 레시피 검색
     public Map<String, Object> searchRecipes(String query) {
@@ -53,7 +47,8 @@ public class EdamamService {
                 url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<Map<String, Object>>() {},
+                new ParameterizedTypeReference<Map<String, Object>>() {
+                },
                 params
         );
         log.info(String.valueOf(responseEntity));

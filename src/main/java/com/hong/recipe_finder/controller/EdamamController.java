@@ -18,14 +18,13 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 포트
 public class EdamamController {
 
-    @Autowired
     private EdamamService edamamService;
 
     // 레시피 검색
     @GetMapping("/api/edamam/search")
     @SuppressWarnings("unchecked")  // 경고 억제
     public List<Map<String, String>> searchRecipes(@RequestParam String query) {
-        log.info("Searching recipes from Edamam with query: " + query);
+        log.info("Searching recipes from Edamam with query: {}", query);
         Map<String, Object> response = edamamService.searchRecipes(query);
 
         List<Map<String, String>> recipes = new ArrayList<>();

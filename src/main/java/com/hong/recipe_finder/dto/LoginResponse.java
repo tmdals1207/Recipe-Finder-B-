@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class LoginResponse {
-    // getters and setters
+
     private String message;
     private User user;
     private String token;

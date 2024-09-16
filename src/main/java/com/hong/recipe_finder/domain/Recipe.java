@@ -92,36 +92,4 @@ public class Recipe {
     private double totalVitaminK;
 
 
-    public void calculateTotalNutrition() {
-        for (Ingredient ingredient : ingredients) {
-            totalCalories += ingredient.getCalories();
-            totalFat += ingredient.getFat();
-            totalSaturatedFat += ingredient.getSaturatedFat();
-            totalTransFat += ingredient.getTransFat();
-            totalMonounsaturatedFat += ingredient.getMonounsaturatedFat();
-            totalPolyunsaturatedFat += ingredient.getPolyunsaturatedFat();
-            totalCarbs += ingredient.getCarbs();
-            totalFiber += ingredient.getFiber();
-            totalSugars += ingredient.getSugars();
-            totalProtein += ingredient.getProtein();
-            totalCholesterol += ingredient.getCholesterol();
-            totalSodium += ingredient.getSodium();
-            totalCalcium += ingredient.getCalcium();
-            totalMagnesium += ingredient.getMagnesium();
-            totalPotassium += ingredient.getPotassium();
-            totalIron += ingredient.getIron();
-            totalPhosphorus += ingredient.getPhosphorus();
-            totalVitaminA += ingredient.getVitaminA();
-            totalVitaminC += ingredient.getVitaminC();
-            totalThiaminB1 += ingredient.getThiaminB1();
-            totalRiboflavinB2 += ingredient.getRiboflavinB2();
-            totalNiacinB3 += ingredient.getNiacinB3();
-            totalVitaminB6 += ingredient.getVitaminB6();
-            totalFolateEquivalent += ingredient.getFolateEquivalent();
-            totalVitaminB12 += ingredient.getVitaminB12();
-            totalVitaminD += ingredient.getVitaminD();
-            totalVitaminE += ingredient.getVitaminE();
-            totalVitaminK += ingredient.getVitaminK();
-        }
-    }
 }

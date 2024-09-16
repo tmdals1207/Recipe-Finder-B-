@@ -23,16 +23,6 @@ public class Comment {
     private String content; // 댓글 내용
     private LocalDateTime createdDate; // 댓글 작성일
 
-    // Constructors, Getters and Setters, etc.
-
-    public Comment() {}
-
-    public Comment(Recipe recipe, String authorProfile, String content, LocalDateTime createdDate) {
-        this.recipe = recipe;
-        this.authorProfile = authorProfile;
-        this.content = content;
-        this.createdDate = createdDate;
+    public Comment() {
     }
-
-    // Getters and Setters
 }

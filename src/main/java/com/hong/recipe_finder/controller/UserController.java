@@ -90,5 +90,61 @@ public class UserController {
         }
     }
 
+    @PutMapping("/change_username")
+    public ResponseEntity<String> changeUsername(@RequestBody UserDto userDto) {
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isUpdated = userService.changeUsername(userDto.getId(), userDto.getUsername());
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Username updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+
+    @PutMapping("/change_email")
+    public ResponseEntity<String> changeEmail(@RequestBody UserDto userDto) {
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isUpdated = userService.changeEmail(userDto.getId(), userDto.getEmail());
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Email updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+    @PutMapping("/change_phone")
+    public ResponseEntity<String> changePhone(@RequestBody UserDto userDto) {
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isUpdated = userService.changePhone(userDto.getId(), userDto.getPhone());
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Phone number updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+    @PutMapping("/change_password")
+    public ResponseEntity<String> changePassword(@RequestBody UserDto userDto) {
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isUpdated = userService.changePassword(userDto.getId(), userDto.getPassword());
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Password updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 
 }

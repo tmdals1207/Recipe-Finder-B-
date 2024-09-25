@@ -5,8 +5,11 @@ import com.hong.recipe_finder.domain.User;
 import com.hong.recipe_finder.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -57,4 +60,59 @@ public class UserService {
         saveUser(user); // 업데이트된 사용자 정보를 저장
         log.info("User {} logged out", user.getEmail());
     }
+
+    public boolean changeUsername(Long id, String newUsername) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setUsername(newUsername);
+            userRepository.save(user);  // 유저 이름 변경 후 저장
+            return true;
+        } else {
+            return false;  // 유저를 찾지 못한 경우
+        }
+    }
+
+
+    public boolean changeEmail(Long id, String newEmail) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setEmail(newEmail);
+            userRepository.save(user);  // 이메일 변경 후 저장
+            return true;
+        } else {
+            return false;  // 유저를 찾지 못한 경우
+        }
+    }
+
+    public boolean changePhone(Long id, String newPhone) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPhone(newPhone);
+            userRepository.save(user);  // 전화번호 변경 후 저장
+            return true;
+        } else {
+            return false;  // 유저를 찾지 못한 경우
+        }
+    }
+
+
+    public boolean changePassword(Long id, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);  // 비밀번호 변경 후 저장
+            return true;
+        } else {
+            return false;  // 유저를 찾지 못한 경우
+        }
+    }
+
 }

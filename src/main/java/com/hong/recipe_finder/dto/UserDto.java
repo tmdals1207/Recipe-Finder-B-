@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UserDto {
+    private Long id;
+
     private String username; // 사용자 이름
 
     private String provider; // 로그인한 서비스
@@ -26,6 +28,7 @@ public class UserDto {
     // DTO 파일을 통하여 Entity 를 생성하는 메소드
     public User toEntity() {
         return User.builder()
+                .id(this.id)
                 .username(this.username)
                 .email(this.email)
                 .phone(this.phone)

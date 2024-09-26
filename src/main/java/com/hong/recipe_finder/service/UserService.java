@@ -66,6 +66,12 @@ public class UserService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+
+            // 새로운 닉네임이 다른 유저에게 사용 중인 경우
+            if (userRepository.existsByUsernameAndIdNot(newUsername, id)) {
+                throw new IllegalArgumentException("해당 닉네임은 이미 다른 사용자가 사용 중입니다.");
+            }
+
             user.setUsername(newUsername);
             userRepository.save(user);  // 유저 이름 변경 후 저장
             return true;
@@ -74,12 +80,17 @@ public class UserService {
         }
     }
 
-
     public boolean changeEmail(Long id, String newEmail) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+
+            // 새로운 이메일이 다른 유저에게 사용 중인 경우
+            if (userRepository.existsByEmailAndIdNot(newEmail, id)) {
+                throw new IllegalArgumentException("해당 이메일은 이미 다른 사용자가 사용 중입니다.");
+            }
+
             user.setEmail(newEmail);
             userRepository.save(user);  // 이메일 변경 후 저장
             return true;
@@ -93,6 +104,12 @@ public class UserService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+
+            // 새로운 전화번호가 다른 유저에게 사용 중인 경우
+            if (userRepository.existsByPhoneAndIdNot(newPhone, id)) {
+                throw new IllegalArgumentException("해당 전화번호는 이미 다른 사용자가 사용 중입니다.");
+            }
+
             user.setPhone(newPhone);
             userRepository.save(user);  // 전화번호 변경 후 저장
             return true;
@@ -100,7 +117,6 @@ public class UserService {
             return false;  // 유저를 찾지 못한 경우
         }
     }
-
 
     public boolean changePassword(Long id, String newPassword) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -114,5 +130,6 @@ public class UserService {
             return false;  // 유저를 찾지 못한 경우
         }
     }
+
 
 }

@@ -35,7 +35,7 @@ public class EdamamService {
 
     // 레시피 검색
     public Map<String, Object> searchRecipes(String query) {
-        String url = "https://api.edamam.com/search?q={query}&app_id={recipeAppId}&app_key={recipeApiKey}&from=0&to=5";
+        String url = "https://api.edamam.com/search?q={query}&app_id={recipeAppId}&app_key={recipeApiKey}&from=0&to=10";
 
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = new HashMap<>();

@@ -18,7 +18,11 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 포트
 public class EdamamController {
 
-    private EdamamService edamamService;
+    private final EdamamService edamamService;
+
+    public EdamamController(EdamamService edamamService) {
+        this.edamamService = edamamService;
+    }
 
     // 레시피 검색
     @GetMapping("/api/edamam/search")

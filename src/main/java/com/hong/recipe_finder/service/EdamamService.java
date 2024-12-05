@@ -6,9 +6,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -56,10 +56,38 @@ public class EdamamService {
     }
 
     // 영양 정보 검색
-    public String getNutritionInfo(String recipeUrl) {
-        String url = "https://api.edamam.com/api/nutrition-details?app_id=" + nutritionAppId + "&app_key=" + nutritionApiKey + "&url=" + recipeUrl;
-        return executeRequest(url);
+    public Map<String, Object> getNutritionInfo(String recipeUrl) {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "https://api.edamam.com/api/nutrition-details";
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 본문 설정
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("url", recipeUrl);
+
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            // exchange 메서드로 POST 요청 수행
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    apiUrl + "?app_id=" + nutritionAppId + "&app_key=" + nutritionApiKey,
+                    HttpMethod.POST,
+                    requestEntity,
+                    new ParameterizedTypeReference<Map<String, Object>>() {}
+            );
+
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            log.error("Error during nutrition info retrieval: {}", e.getMessage());
+            throw e;
+        }
     }
+
+
+
 
     // 식단 추천
     public String getMealRecommendations(String dietType) {

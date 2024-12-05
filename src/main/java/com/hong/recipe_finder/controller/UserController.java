@@ -92,9 +92,6 @@ public class UserController {
 
     @PutMapping("/change_username")
     public ResponseEntity<String> changeUsername(@RequestBody UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         boolean isUpdated = userService.changeUsername(userDto.getId(), userDto.getUsername());
 
         if (isUpdated) {
@@ -107,10 +104,7 @@ public class UserController {
 
     @PutMapping("/change_email")
     public ResponseEntity<String> changeEmail(@RequestBody UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        boolean isUpdated = userService.changeEmail(userDto.getId(), userDto.getEmail());
+         boolean isUpdated = userService.changeEmail(userDto.getId(), userDto.getEmail());
 
         if (isUpdated) {
             return ResponseEntity.ok("Email updated successfully");
@@ -121,9 +115,6 @@ public class UserController {
 
     @PutMapping("/change_phone")
     public ResponseEntity<String> changePhone(@RequestBody UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         boolean isUpdated = userService.changePhone(userDto.getId(), userDto.getPhone());
 
         if (isUpdated) {
@@ -135,10 +126,7 @@ public class UserController {
 
     @PutMapping("/change_password")
     public ResponseEntity<String> changePassword(@RequestBody UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        boolean isUpdated = userService.changePassword(userDto.getId(), userDto.getPassword());
+          boolean isUpdated = userService.changePassword(userDto.getId(), userDto.getPassword());
 
         if (isUpdated) {
             return ResponseEntity.ok("Password updated successfully");

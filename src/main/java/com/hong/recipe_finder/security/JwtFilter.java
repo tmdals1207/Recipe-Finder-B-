@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -37,8 +39,12 @@ public class JwtFilter extends GenericFilterBean {
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.parseToken(token).getSubject();
             log.info("Authenticated user: {}", username);
+            UserDetails userDetails = User.builder()
+                    .username(username)
+                    .password("")
+                    .build();
 
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
 
         }
         // 만약 인증 정보가 이미 존재하고 OAuth2 인증인 경우 JWT 인증을 건너뜀

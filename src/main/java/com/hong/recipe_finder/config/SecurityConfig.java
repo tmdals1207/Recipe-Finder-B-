@@ -5,12 +5,12 @@ import com.hong.recipe_finder.repository.UserRepository;
 import com.hong.recipe_finder.security.JwtFilter;
 import com.hong.recipe_finder.security.JwtTokenProvider;
 import com.hong.recipe_finder.service.OAuth2Service;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,18 +41,18 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable) // 로그아웃 사용 X
                 .formLogin(AbstractHttpConfigurer::disable) // 폼 로그인 사용 X
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll() // /api/** 경로를 인증 없이 허용
+                        .requestMatchers("/api/**", "/login", "/oauth2/**", "/error", "/favicon.ico").permitAll() // /api/** 경로를 인증 없이 허용
                         .anyRequest().permitAll() // 그 외의 모든 요청은 일단 허용
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler((request, response, authentication) -> {
-                            String token = getToken(authentication);
-                            log.info(token);
-
-                            // 프론트엔드로 리디렉션할 URL
-                            String redirectUrl = "http://localhost:3000/oauth2/callback?token=" + token;
-                            // 리디렉션
-                            response.sendRedirect(redirectUrl);
+                            try {
+                                String token = getToken(authentication);
+                                response.sendRedirect("http://localhost:3000/oauth2/callback?token=" + token);
+                            } catch (RuntimeException e) {
+                                log.error("OAuth2 Success Handler Error: {}", e.getMessage());
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Failed to generate token");
+                            }
                         })
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2Service) // OAuth2 사용자 서비스 설정
@@ -73,17 +73,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() { // security 를 적용하지 않을 리소스
-        return web -> web.ignoring()
-                .requestMatchers("/error", "/favicon.ico");
-    }
 
     public String getToken(Authentication authentication) {
         String email = ((DefaultOAuth2User) authentication.getPrincipal()).getAttribute("email");
         String provider = ((DefaultOAuth2User) authentication.getPrincipal()).getAttribute("provider");
 
         User user = userRepository.findUserByEmailAndProvider(email, provider);
+        if (user == null) {
+            throw new RuntimeException("User not found"); // 적절한 예외 처리
+        }
+
         return user.getToken();
     }
 }

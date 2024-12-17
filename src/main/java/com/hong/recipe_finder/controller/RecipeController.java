@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hong.recipe_finder.domain.CookingStep;
 import com.hong.recipe_finder.domain.Ingredient;
 import com.hong.recipe_finder.domain.Recipe;
+import com.hong.recipe_finder.domain.User;
+import com.hong.recipe_finder.repository.UserRepository;
 import com.hong.recipe_finder.service.RecipeService;
+import com.hong.recipe_finder.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -24,9 +28,13 @@ import java.util.List;
 public class RecipeController {
 
     private final RecipeService recipeService; // Service 계층 사용
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public RecipeController(RecipeService recipeService) {
+    public RecipeController(RecipeService recipeService, UserService userService, UserRepository userRepository) {
         this.recipeService = recipeService;
+        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/all")
@@ -54,13 +62,19 @@ public class RecipeController {
             @RequestParam("profileImage") MultipartFile profileImage, // 프로필 이미지 파일
             @RequestParam(value = "cookingStepImages", required = false) MultipartFile[] cookingStepImages // 조리 단계 이미지들
     ) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        log.info("레시피 만들기 요청 수신됨");
         // 작성자 프로필 설정
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserName = authentication.getName();
+
+        String currentUserEmail = authentication.getName();
+        User currentUser = userRepository.findByEmail(currentUserEmail);
+        String currentUserName = currentUser.getUsername();
+
 
         // JSON 문자열을 실제 리스트로 변환 (Jackson 또는 Gson 등을 사용할 수 있음)
-        List<Ingredient> ingredients = convertJsonToIngredients(ingredientsJson);
-        List<Ingredient> seasonings = convertJsonToIngredients(seasoningsJson);
+        List<Ingredient> ingredients = Arrays.asList(mapper.readValue(ingredientsJson, Ingredient[].class));
+        List<Ingredient> seasonings = Arrays.asList(mapper.readValue(seasoningsJson, Ingredient[].class));
         List<String> tags = convertJsonToList(tagsJson);
         List<CookingStep> cookingSteps = convertJsonToCookingSteps(cookingStepsJson);
 
@@ -79,7 +93,7 @@ public class RecipeController {
         recipe.setAuthorProfile(currentUserName);
 
         // 프로필 이미지 처리
-        if (!profileImage.isEmpty()) {
+        if (profileImage != null && !profileImage.isEmpty()) {
             String profileImageUrl = recipeService.saveProfileImage(profileImage); // 이미지 저장 서비스 로직
             recipe.setProfileImage(profileImageUrl);
         }
@@ -120,6 +134,7 @@ public class RecipeController {
             throw new RuntimeException("JSON 변환 오류", e);
         }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {

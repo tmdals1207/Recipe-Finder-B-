@@ -4,6 +4,8 @@ import com.hong.recipe_finder.domain.CookingStep;
 import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.dto.CookingStepDTO;
 import com.hong.recipe_finder.repository.RecipeRepository;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +45,17 @@ public class RecipeService {
         profileImage.transferTo(filePath.toFile());
 
         return PROFILE_IMAGE_DIR + fileName; // 저장된 파일 경로 반환
+    }
+
+    public Resource loadImage(String imagePath) throws Exception {
+        Path filePath = Paths.get(imagePath).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists() && resource.isReadable()) {
+            return resource;
+        } else {
+            throw new Exception("Image not found: " + imagePath);
+        }
     }
 
     public void saveCookingStepImages(MultipartFile[] cookingStepImages, Recipe recipe) throws IOException {

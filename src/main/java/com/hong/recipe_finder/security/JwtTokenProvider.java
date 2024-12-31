@@ -38,8 +38,9 @@ public class JwtTokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(String userEmail) {
+    public String createToken(String userEmail, String userName) {
         Claims claims = Jwts.claims().setSubject(userEmail);
+        claims.put("username", userName);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + tokenValidityInMilliseconds);
@@ -78,7 +79,7 @@ public class JwtTokenProvider {
     // JWT 토큰으로부터 인증 정보 조회
     public Authentication getAuthentication(String token) {
         Claims claims = parseToken(token);
-        String username = claims.getSubject();
+        String username = claims.get("username", String.class);
         List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("roles")).stream()
                 .map(role -> new SimpleGrantedAuthority((String) role))
                 .collect(Collectors.toList());

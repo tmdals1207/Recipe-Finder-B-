@@ -1,5 +1,6 @@
 package com.hong.recipe_finder.security;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,12 +38,11 @@ public class JwtFilter extends GenericFilterBean {
 
         // 현재 컨텍스트에 인증 정보가 없고 JWT 토큰이 유효할 경우 JWT 인증 처리
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.parseToken(token).getSubject();
-            log.info("Authenticated user: {}", username);
-            UserDetails userDetails = User.builder()
-                    .username(username)
-                    .password("")
-                    .build();
+            Claims claims = jwtTokenProvider.parseToken(token);
+            String userEmail = claims.getSubject();
+            String username = claims.get("username", String.class);
+            log.info("Authenticated user: {}, Username: {}", userEmail, username);
+            CustomUserDetails userDetails = new CustomUserDetails(userEmail, username);
 
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
 

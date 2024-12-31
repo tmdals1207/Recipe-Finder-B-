@@ -10,7 +10,9 @@ import com.hong.recipe_finder.repository.UserRepository;
 import com.hong.recipe_finder.service.RecipeService;
 import com.hong.recipe_finder.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,9 +68,8 @@ public class RecipeController {
         log.info("레시피 만들기 요청 수신됨");
         // 작성자 프로필 설정
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String currentUserEmail = authentication.getName();
-        User currentUser = userRepository.findByEmail(currentUserEmail);
+        String userName = authentication.getName();
+        User currentUser = userRepository.findByUsername(userName);
         String currentUserName = currentUser.getUsername();
 
 
@@ -132,6 +133,18 @@ public class RecipeController {
             return objectMapper.readValue(json, new TypeReference<List<CookingStep>>() {});
         } catch (IOException e) {
             throw new RuntimeException("JSON 변환 오류", e);
+        }
+    }
+
+    @GetMapping("/images/get")
+    public ResponseEntity<Resource> getImage(@RequestParam("path") String imagePath) {
+        try {
+            Resource resource = recipeService.loadImage(imagePath);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

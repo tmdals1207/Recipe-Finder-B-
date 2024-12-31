@@ -49,7 +49,7 @@ public class UserController {
 
         if (user != null) {
             // 사용자 정보가 있을 경우
-            String token = jwtTokenProvider.createToken(user.getEmail()); // 토큰 생성
+            String token = jwtTokenProvider.createToken(user.getEmail(), user.getUsername()); // 토큰 생성
             log.info("token: {}", token);
             user.setToken(token);
             userService.saveUser(user); // 업데이트된 사용자 정보를 저장

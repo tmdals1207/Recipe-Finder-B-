@@ -44,14 +44,14 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
         UserDto userDto = OAuthAttributes.extract(registrationId, attributes);
-        log.info(attributes.toString());
+        log.info("attributes = {}", attributes.toString());
         userDto.setProvider(registrationId);
 
         // 사용자 정보 업데이트 또는 저장
         User user = updateOrSaveUser(userDto);
 
         // JWT 토큰 생성
-        String token = jwtTokenProvider.createToken(user.getEmail());
+        String token = jwtTokenProvider.createToken(user.getEmail(), user.getUsername());
 
         // 사용자 객체에 토큰 설정
         user.setToken(token);

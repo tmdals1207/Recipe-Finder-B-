@@ -7,6 +7,7 @@ import com.hong.recipe_finder.domain.Ingredient;
 import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.domain.User;
 import com.hong.recipe_finder.repository.UserRepository;
+import com.hong.recipe_finder.security.CustomUserDetails;
 import com.hong.recipe_finder.service.RecipeService;
 import com.hong.recipe_finder.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -66,11 +67,19 @@ public class RecipeController {
     ) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         log.info("레시피 만들기 요청 수신됨");
+        String email = "";
+        String userName = "";
         // 작성자 프로필 설정
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName = authentication.getName();
-        User currentUser = userRepository.findByUsername(userName);
-        String currentUserName = currentUser.getUsername();
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            userName = userDetails.getName();
+            email = userDetails.getEmail();
+            log.info("Extracted user details: username={}, email={}", userName, email);
+        } else {
+            log.warn("Principal is not of type CustomUserDetails");
+        }
+        User currentUser = userRepository.findByEmailAndUsername(email, userName);
+        String currentUserName = userService.getUsername(currentUser);
 
 
         // JSON 문자열을 실제 리스트로 변환 (Jackson 또는 Gson 등을 사용할 수 있음)

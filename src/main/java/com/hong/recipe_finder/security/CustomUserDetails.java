@@ -1,6 +1,7 @@
 package com.hong.recipe_finder.security;
 
 import lombok.Getter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Getter
 public class CustomUserDetails implements UserDetails, Serializable {
+    @Getter
     private final String email;
     private final String username;
 
@@ -47,4 +49,9 @@ public class CustomUserDetails implements UserDetails, Serializable {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public String getName() {
+        return username;
+    }
+
 }

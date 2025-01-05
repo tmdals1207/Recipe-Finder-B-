@@ -45,6 +45,7 @@ public class JwtFilter extends GenericFilterBean {
             CustomUserDetails userDetails = new CustomUserDetails(userEmail, username);
 
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+            log.info("Authentication set in SecurityContext: {}", SecurityContextHolder.getContext().getAuthentication());
 
         }
         // 만약 인증 정보가 이미 존재하고 OAuth2 인증인 경우 JWT 인증을 건너뜀

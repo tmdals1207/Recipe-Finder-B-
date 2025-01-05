@@ -132,4 +132,7 @@ public class UserService {
     }
 
 
+    public String getUsername(User currentUser) {
+        return currentUser.getUsername();
+    }
 }

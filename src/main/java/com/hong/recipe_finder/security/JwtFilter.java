@@ -43,6 +43,7 @@ public class JwtFilter extends GenericFilterBean {
             String username = claims.get("username", String.class);
             log.info("Authenticated user: {}, Username: {}", userEmail, username);
             CustomUserDetails userDetails = new CustomUserDetails(userEmail, username);
+
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
             log.info("Authentication set in SecurityContext: {}", SecurityContextHolder.getContext().getAuthentication());
 

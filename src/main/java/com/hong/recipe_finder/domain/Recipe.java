@@ -27,12 +27,10 @@ public class Recipe {
     private int cookingTime; // 걸리는 시간 (분 단위)
     private String difficulty; // 난이도 (e.g. 쉬움, 중간, 어려움)
 
-    @ElementCollection
-    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Ingredient> ingredients = new ArrayList<>(); // 재료
 
-    @ElementCollection
-    @CollectionTable(name = "recipe_seasonings", joinColumns = @JoinColumn(name = "recipe_id"))
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Ingredient> seasonings = new ArrayList<>(); // 양념
 
     @Lob

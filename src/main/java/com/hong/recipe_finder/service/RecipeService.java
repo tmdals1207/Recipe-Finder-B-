@@ -1,8 +1,11 @@
 package com.hong.recipe_finder.service;
 
 import com.hong.recipe_finder.domain.CookingStep;
+import com.hong.recipe_finder.domain.Ingredient;
 import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.dto.CookingStepDTO;
+import com.hong.recipe_finder.dto.RecipeWithDetails;
+import com.hong.recipe_finder.repository.IngredientRepository;
 import com.hong.recipe_finder.repository.RecipeRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -23,6 +26,7 @@ import java.util.UUID;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository; // Repository 계층 사용
+    private final IngredientRepository ingredientRepository;
 
     public String saveProfileImage(MultipartFile profileImage) throws IOException {
         // 프로필 이미지 디렉토리 확인 및 생성
@@ -97,8 +101,9 @@ public class RecipeService {
         return steps;
     }
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
     public List<Recipe> getAllRecipes() {
@@ -110,9 +115,30 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
+    //TODO 여기 수정
     public Optional<Recipe> getRecipeById(Long id) {
         return recipeRepository.findById(id);
     }
+
+    public RecipeWithDetails getRecipeWithDetails(Long id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found"));
+        List<Ingredient> ingredients = ingredientRepository.findByRecipeId(id);
+        List<Ingredient> seasonings = ingredientRepository.findByRecipeId(id);
+
+        return new RecipeWithDetails(
+                recipe.getTitle(),
+                recipe.getProfileImage(),
+                recipe.getAuthorProfile(),
+                recipe.getSummation(),
+                recipe.getDifficulty(),
+                recipe.getCookingTime(),
+                ingredients,
+                seasonings,
+                recipe.getCookingSteps(),
+                recipe.getTips()
+        );
+    }
+
 
     public Optional<Recipe> deleteRecipe(Long id) {
         return recipeRepository.findById(id)

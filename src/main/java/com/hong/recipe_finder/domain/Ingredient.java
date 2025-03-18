@@ -1,13 +1,13 @@
 package com.hong.recipe_finder.domain;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 
-@Embeddable
+@Entity
 public class Ingredient {
     private String name; // 재료명
     private String quantity; // 양 (예: 1컵, 100g)
@@ -41,6 +41,12 @@ public class Ingredient {
     private double vitaminD; // 비타민 D (µg)
     private double vitaminE; // 비타민 E (mg)
     private double vitaminK; // 비타민 K (µg)
+    @Id
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")  // 외래키로 연결
+    private Recipe recipe;
 
     public Ingredient() {}
 
@@ -81,4 +87,5 @@ public class Ingredient {
         this.vitaminE = vitaminE;
         this.vitaminK = vitaminK;
     }
+
 }

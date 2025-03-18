@@ -6,6 +6,7 @@ import com.hong.recipe_finder.domain.CookingStep;
 import com.hong.recipe_finder.domain.Ingredient;
 import com.hong.recipe_finder.domain.Recipe;
 import com.hong.recipe_finder.domain.User;
+import com.hong.recipe_finder.dto.RecipeWithDetails;
 import com.hong.recipe_finder.repository.UserRepository;
 import com.hong.recipe_finder.security.CustomUserDetails;
 import com.hong.recipe_finder.service.RecipeService;
@@ -157,13 +158,21 @@ public class RecipeController {
         }
     }
 
-
+    //TODO 여기 수정.
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
-        return recipeService.getRecipeById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<RecipeWithDetails> getRecipeById(@PathVariable Long id) {
+        try {
+            RecipeWithDetails recipeWithDetails = recipeService.getRecipeWithDetails(id);
+            return ResponseEntity.ok(recipeWithDetails);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
+//    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
+//        return recipeService.getRecipeById(id)
+//                .map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.notFound().build());
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteRecipe(@PathVariable Long id) {
